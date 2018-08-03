@@ -4,6 +4,8 @@ Centralized DNS management
 
 ---
 
+![DNS Cockpit](/screenshot.png?raw=true)
+
 ## How to run
 
 ```shell
