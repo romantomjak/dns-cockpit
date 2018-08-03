@@ -10,6 +10,12 @@ Centralized DNS management
 make configure run
 ```
 
+## Database migrations
+
+```shell
+make migration m="add users table"
+```
+
 ## License
 
 MIT
