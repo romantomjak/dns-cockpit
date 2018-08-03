@@ -1,0 +1,17 @@
+version: "3"
+
+volumes:
+  db-data:
+
+services:
+  db:
+    image: postgres:10.4-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    ports:
+      - "127.0.0.1:5432:5432"

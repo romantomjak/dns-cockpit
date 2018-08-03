@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+<main class="login-page">
+    <h1 class="login-page__heading">DNS COCKPIT</h1>
+    <form class="login-form" name="login-form" method="post" action="/login">
+        <input class="login-form__input" type="text" name="username" placeholder="Username" />
+        <input class="login-form__input" type="password" name="password" placeholder="Password" />
+        <button class="login-form__button" type="submit">Login</button>
+    </form>
+    <p class="login-page__version">v0.1.0</p>
+</main>
+{% endblock %}
