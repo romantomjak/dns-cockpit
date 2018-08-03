@@ -2,10 +2,12 @@ import os
 
 import jinja2
 import aiohttp_jinja2
+import aiohttp_security
 import aiohttp_session
 from aiohttp import web
 
 from dnscockpit import views
+from dnscockpit.adapters.database_auth import DatabaseAuthorizationPolicy
 from dnscockpit.adapters.session_storage import PostgreSQLStorage
 from dnscockpit.bootstrap import configure
 
@@ -24,6 +26,7 @@ async def app_factory(env):
     configure(app, env)
 
     aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader('dnscockpit', 'templates'))
+    aiohttp_security.setup(app, aiohttp_security.SessionIdentityPolicy(), DatabaseAuthorizationPolicy(app))
     aiohttp_session.setup(app, PostgreSQLStorage())
 
     return app
