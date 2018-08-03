@@ -4,7 +4,9 @@ Centralized DNS management
 
 ---
 
-![DNS Cockpit](/screenshot.png?raw=true)
+<p align="center">
+    <img src="/screenshot.png?raw=true" alt="DNS Cockpit" />
+</p>
 
 ## How to run
 
