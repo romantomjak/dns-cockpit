@@ -7,6 +7,7 @@ Centralized DNS management
 ## How to run
 
 ```shell
+mv env.example .env
 make configure run
 ```
 
