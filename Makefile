@@ -10,5 +10,11 @@ configure:
 run:
 	@python dnscockpit/main.py
 
-migration:
+alembic-migration:
 	@alembic revision --autogenerate -m "$(m)"
+
+alembic-upgrade:
+	@alembic upgrade head
+
+alembic-downgrade:
+	@alembic downgrade -1
