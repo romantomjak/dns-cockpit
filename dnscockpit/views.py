@@ -1,6 +1,6 @@
 import aiohttp_jinja2
 
-from dnscockpit.adapters.database_auth import login_required
+from dnscockpit.auth import login_required
 
 
 @login_required

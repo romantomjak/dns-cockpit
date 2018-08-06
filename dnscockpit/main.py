@@ -7,8 +7,8 @@ import aiohttp_session
 from aiohttp import web
 
 from dnscockpit import views
-from dnscockpit.adapters.database_auth import DatabaseAuthorizationPolicy
-from dnscockpit.adapters.session_storage import PostgreSQLStorage
+from dnscockpit.auth import DatabaseAuthorizationPolicy
+from dnscockpit.session import PostgreSQLStorage
 from dnscockpit.bootstrap import configure
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,7 +19,7 @@ async def app_factory(env):
     app.add_routes([
         web.get('/', views.index, name='index'),
         web.get('/login', views.login, name='login'),
-        web.post('/login', views.login, name='login'),
+        web.post('/login', views.login),
     ])
     app.router.add_static('/static/', path=os.path.join(BASE_DIR, 'static'), name='static')
 
