@@ -2,7 +2,6 @@ from functools import wraps
 
 from aiohttp import web
 from aiohttp_security.abc import AbstractAuthorizationPolicy
-from aiohttp_security import authorized_userid
 from aiohttp_session import get_session
 
 
