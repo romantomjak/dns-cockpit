@@ -21,6 +21,12 @@ make configure run
 make migration m="add users table"
 ```
 
+## Tests
+
+```
+make unit-tests
+```
+
 ## License
 
 MIT
