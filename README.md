@@ -17,8 +17,16 @@ make configure run
 
 ## Database migrations
 
+To create a new migration - modify orm mappings and then run:
+
 ```shell
-make migration m="add users table"
+make alembic-migration m="add users table"
+```
+
+To apply migration(-s) run:
+
+```
+make alembic-upgrade
 ```
 
 ## Tests
