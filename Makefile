@@ -1,7 +1,7 @@
 include .env
 export
 
-.PHONY: configure run migration
+.PHONY: configure run alembic-migration alembic-upgrade alembic-downgrade unit-tests
 
 configure:
 	@pip install -r requirements.txt
@@ -18,3 +18,6 @@ alembic-upgrade:
 
 alembic-downgrade:
 	@alembic downgrade -1
+
+unit-tests:
+	@pytest -sv tests/

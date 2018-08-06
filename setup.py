@@ -8,5 +8,7 @@ setup(
     license='MIT',
     author='Roman Tomjak',
     author_email='r.tomjaks@gmail.com',
-    description='Centralized DNS management'
+    description='Centralized DNS management',
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
 )
