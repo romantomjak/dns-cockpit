@@ -2,9 +2,10 @@ import json
 import time
 
 import aiohttp_session
+import pytest
 from aiohttp import web
 
-from dnscockpit.auth import login_required
+from dnscockpit.auth import DatabaseAuthorizationPolicy, login_required
 
 
 def make_cookie(client, data):
@@ -32,7 +33,7 @@ def create_app():
     return app
 
 
-async def test_unauthorized_user_is_redirected_to_login_page(aiohttp_client):
+async def test_decorator_redirects_unauthorized_user(aiohttp_client):
     client = await aiohttp_client(create_app())
 
     resp = await client.get('/')
@@ -43,7 +44,7 @@ async def test_unauthorized_user_is_redirected_to_login_page(aiohttp_client):
     assert prev_resp.url == client.make_url('/')
 
 
-async def test_authorized_user_is_logged_in(aiohttp_client):
+async def test_decorator_does_not_redirect_authenticated_user(aiohttp_client):
     client = await aiohttp_client(create_app())
     make_cookie(client, {'user_id': 1})
 
