@@ -46,7 +46,7 @@ I'm only using docker for shipping the application. Normally, I develop
 
 ```shell
 mv env.example .env
-mv docker-compose.overrides.yml.example docker-compose.overrides.yml
+mv docker-compose.override.yml.example docker-compose.override.yml
 docker-compose up -d db
 make install run
 ```
