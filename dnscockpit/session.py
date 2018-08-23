@@ -1,20 +1,22 @@
 import uuid
 from datetime import datetime, timedelta
 
+import inject
 from aiohttp_session import AbstractStorage, Session
 
 
 class PostgreSQLStorage(AbstractStorage):
+    db = inject.attr('db')
 
     async def load_session(self, request):
         cookie = self.load_cookie(request)
         if cookie is None:
             return Session(None, data=None, new=True, max_age=self.max_age)
         else:
-            async with request.app['db'].acquire() as conn:
+            async with self.db as conn:
                 key = str(cookie)
-                stmt = await conn.prepare("SELECT data FROM sessions WHERE id = $1")
-                data = await stmt.fetchval(key)
+                stmt = await conn.prepare("SELECT data FROM sessions WHERE id = $1 AND expires_at > $2")
+                data = await stmt.fetchval(key, datetime.utcnow())
                 if data is None:
                     return Session(None, data=None, new=True, max_age=self.max_age)
                 try:
@@ -32,13 +34,15 @@ class PostgreSQLStorage(AbstractStorage):
             if session.empty:
                 self.save_cookie(response, '', max_age=session.max_age)
             else:
-                key = str(key)
                 self.save_cookie(response, key, max_age=session.max_age)
 
         data = self._encoder(self._get_session_data(session))
-        async with request.app['db'].acquire() as conn:
-            max_age = session.max_age
-            expire = max_age if max_age is not None else datetime.utcnow() + timedelta(hours=1)  # 1h by default
+        async with self.db as conn:
             async with conn.transaction():
-                stmt = await conn.prepare("INSERT INTO sessions (id, data, expires_at) VALUES ($1, $2, $3)")
+                max_age = session.max_age
+                expire = max_age if max_age is not None else datetime.utcnow() + timedelta(hours=1)  # 1h by default
+                if session.new:
+                    stmt = await conn.prepare("INSERT INTO sessions (id, data, expires_at) VALUES ($1, $2, $3)")
+                else:
+                    stmt = await conn.prepare("UPDATE sessions SET data=$2, expires_at=$3 WHERE id=$1")
                 await stmt.fetchval(key, data, expire)

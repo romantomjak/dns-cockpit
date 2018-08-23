@@ -1,20 +1,31 @@
+import asyncio
 import os
+import logging
 
-import jinja2
 import aiohttp_jinja2
 import aiohttp_security
 import aiohttp_session
+import inject
+import jinja2
 from aiohttp import web
 
 from dnscockpit import views
 from dnscockpit.auth import DatabaseAuthorizationPolicy
+from dnscockpit.bootstrap import bootstrap
 from dnscockpit.session import PostgreSQLStorage
-from dnscockpit.bootstrap import configure
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+async def close_pg_pool(app):
+    logging.debug("Closing DB pool")
+    pool = inject.instance('pool')
+    await asyncio.wait_for(pool.close(), 30.0)
+
+
 async def app_factory(env):
+    await bootstrap(env)
+
     app = web.Application()
     app.add_routes([
         web.get('/', views.index, name='index'),
@@ -23,10 +34,10 @@ async def app_factory(env):
     ])
     app.router.add_static('/static/', path=os.path.join(BASE_DIR, 'static'), name='static')
 
-    configure(app, env)
+    app.on_cleanup.append(close_pg_pool)
 
     aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader('dnscockpit', 'templates'))
-    aiohttp_security.setup(app, aiohttp_security.SessionIdentityPolicy(), DatabaseAuthorizationPolicy(app))
+    aiohttp_security.setup(app, aiohttp_security.SessionIdentityPolicy(), DatabaseAuthorizationPolicy())
     aiohttp_session.setup(app, PostgreSQLStorage())
 
     return app
