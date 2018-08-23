@@ -1,3 +1,10 @@
+def get_server_config(env):
+    return {
+        'host': env.get('APP_HOST', '127.0.0.1'),
+        'port': 8000,
+    }
+
+
 def get_db_config(env):
     return {
         'host': env.get('DB_HOST'),

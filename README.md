@@ -41,11 +41,12 @@ docker-compose up -d
 
 ## Development
 
-I'm only using docker for shipping my application. Normally I develop 
+I'm only using docker for shipping the application. Normally, I develop 
 "outside" of docker to ease debugging and so my usual setup steps are:
 
 ```shell
 mv env.example .env
+mv docker-compose.overrides.yml.example docker-compose.overrides.yml
 docker-compose up -d db
 make install run
 ```

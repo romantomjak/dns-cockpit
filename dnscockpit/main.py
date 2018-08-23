@@ -9,7 +9,7 @@ import inject
 import jinja2
 from aiohttp import web
 
-from dnscockpit import views
+from dnscockpit import views, config
 from dnscockpit.auth import DatabaseAuthorizationPolicy
 from dnscockpit.bootstrap import bootstrap
 from dnscockpit.session import PostgreSQLStorage
@@ -42,4 +42,4 @@ async def app_factory(env):
 
     return app
 
-web.run_app(app_factory(os.environ), host='127.0.0.1', port=8000)
+web.run_app(app_factory(os.environ), **config.get_server_config(os.environ))

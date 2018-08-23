@@ -13,5 +13,19 @@ services:
       POSTGRES_DB: "${DB_NAME}"
       POSTGRES_USER: "${DB_USER}"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
+
+  web:
+    image: web
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:8000:80"
+
+  app:
+    image: app
+    build: .
+    env_file: .env
+    environment:
+      DB_HOST: db
+      APP_HOST: 0.0.0.0
